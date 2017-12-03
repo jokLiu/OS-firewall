@@ -38,3 +38,18 @@ checks whether the filename in the firewall rule denotes an
 existing executable file. If there is any error in the syntax or any
 filename is not an executable file, this program aborts with
 appropriate error messages.
+
+### Running the code
+
+1. Compiling and loading the module, and initializing the default rules:
+
+   ` $ sudo ./run.sh`
+
+2.  Loading new firewall rules:
+
+   `$ sudo ./Setup/firewallSetup W <filename>`
+
+   ​
+
+
+
