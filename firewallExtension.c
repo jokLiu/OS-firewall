@@ -55,6 +55,7 @@ unsigned int FirewallExtensionHook (void *priv,
   }
 
   if (tcp->syn) {
+
     //------------------------
     // Find the full path to the executable
     //------------------------
@@ -65,6 +66,7 @@ unsigned int FirewallExtensionHook (void *priv,
     snprintf (cmdlineFile, BUFFERSIZE, "/proc/%d/exe", mod_pid);
     res = kern_path (cmdlineFile, LOOKUP_FOLLOW, &path);
     if (res) {
+      printk(KERN_INFO "kern_path failed\n");
       // TODO drop or not drop
       return -EFAULT;
     }
@@ -84,16 +86,16 @@ unsigned int FirewallExtensionHook (void *priv,
     port = ntohs (tcp->dest);
 
     /* if not valid connection, drop it */
-    if(!access_validity(program, port)){
+    if(access_validity(program, port)==0){
       tcp_done (sk);  /*terminate Connectionction immediately */
       return NF_DROP;
     }
 
     /* free the buffer as it is no longer needed */
     kfree(buf);
-
   }
 
+  
   /* otherwise accept the connection */
   return NF_ACCEPT;    
 }
@@ -137,6 +139,7 @@ static int access_validity(char *program, int port){
 
   /* release the lock */
   up_read(&rwsem);
+
   return validity;
 }
 
